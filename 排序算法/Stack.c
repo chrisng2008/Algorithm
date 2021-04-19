@@ -1,40 +1,89 @@
-#include"Stack.h"
-#include<stdio.h>
-void StackInit(Stack* ps)
-{
-	ps->data = NULL;
-	ps->capacity = 0;
-	ps->top = 0;
-}
-void DestorySatck(Stack* ps)
-{
-	ps->data = NULL;
-	ps->capacity = 0;
-	ps->top = 0;
+#ifndef STACK_H_INCLUDED
+#define STACK_H_INCLUDED
+#define NULL 0
+#include "Stack.h"
 
+Status initLStack(LinkStack* s)//初始化栈
+{
+	LinkStackPtr S = (LinkStackPtr)malloc(sizeof(StackNode));
+	S->next = NULL;
+	s->top = S;
+	s->count = 0;
 }
 
-void StackPush(Stack* ps, Elemtype x)
+
+Status isEmptyLStack(LinkStack* s)//判断栈是否为空
 {
-	if (ps->top == ps->capacity)
+	if (s->count == 0)
+		return SUCCESS;
+	return ERROR;
+}
+
+
+Status getTopLStack(LinkStack* s, ElemType* e)//得到栈顶元素
+{
+	if (s->count == 0)
+		return ERROR;
+	else
+		*e = s->top->data;
+	return SUCCESS;
+}
+
+
+Status clearLStack(LinkStack* s)//清空栈
+{
+	if (s->count == 0)
+		return ERROR;
+	ElemType e;
+	for (int i = s->count; i > 0; i--)
 	{
-		size_t newcapacity = ps->capacity == 0 ? sizeof(int) : ps->capacity * 2;
-		ps->data = (Elemtype*)realloc(ps->data, sizeof(Elemtype)*newcapacity);//开辟内存
-		ps->capacity = newcapacity;
+		popLStack(s, &e);
 	}
-	ps->data[ps->top] = x;
-	ps->top++;
+	return SUCCESS;
 }
-void StackPop(Stack* ps)
+Status pushLStack(LinkStack* s, ElemType data)//入栈
 {
-	ps->top--;
+	LinkStackPtr p = (LinkStackPtr)malloc(sizeof(StackNode));
+	if (p == NULL)
+	{
+		printf("动态分配内存失败!\n");
+		return ERROR;
+	}
+	p->data = data;
+	p->next = s->top;
+	s->top = p;
+	s->count++;
+	return SUCCESS;
 }
-Elemtype StackTop(Stack* ps)
+
+
+
+
+Status popLStack(LinkStack* s, ElemType* data)//出栈
 {
-	return ps->data[ps->top - 1];
+	*data = s->top->data;
+	LinkStackPtr p = s->top;
+	s->top = s->top->next;
+	free(p);
+	s->count--;
+	return SUCCESS;
 }
-Status StackEmpty(Stack* ps)
+
+
+Status destroyLStack(LinkStack* s)//销毁栈
 {
-	return ps->top == 0 ? 0 : 1;
+	if (isEmptyLStack(&s))
+		return ERROR;
+	while (s->top!=NULL)
+	{
+		LinkStackPtr p = s->top;
+		s->top = s->top->next;
+		free(p);
+	}
+	s->count = 0;
+	return SUCCESS;
 }
+
+
+#endif
 

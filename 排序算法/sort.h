@@ -81,12 +81,8 @@ void ColorSort(int *a,int size);
  */
 int GetNumTop(int* a, int k,int size);
 
-/**
- *  @name        : int GetNumInPos(int num, int pos)
- *  @description : 返回一个数的第pos位数
- *  @param       : 整数anum，位数pos
- */
-int GetNumInPos(int num, int pos);
+
+int Knum(int num, int k);
 
 
 
@@ -98,7 +94,7 @@ int GetNumInPos(int num, int pos);
 void Display(int* array,int size);
 void getcolorArray(int array[], int size);
 void MakeRand(int arr[], int size);
-void swap(int a, int b);
+void swap(int *a, int *b);
 int WriteArray(int size);
 void ReadArray(int size,int* arr);
 #endif // QUEUE_H_INCLUDED

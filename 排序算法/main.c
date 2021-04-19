@@ -13,7 +13,7 @@ int getInt();
 char* s_gets(char* st, int n);
 void RandonArray(int array[],int size);
 int setSize();
-int* array;
+
 int main()
 {
     puts("欢迎来到排序算法测试系统");
@@ -24,7 +24,7 @@ int main()
     printf("%d",size);
     //int *array = (int *)calloc(size, sizeof(int));
     int *temp = (int *)calloc(size, sizeof(int));
-    array = (int*)malloc(sizeof(int)*size);
+    int *array = (int*)malloc(sizeof(int)*size);
     menu();
     WriteArray(size);
     ReadArray(size,array);
@@ -63,7 +63,7 @@ int read()
     do
     {
         printf("请输入数字\n");
-        scanf_s("%s", num);
+        scanf("%s", num);
         if (i = strspn(num, "0123456789"))
         {
             value = atoi(num);
@@ -94,7 +94,8 @@ void select(int *array,int *temp,int size)
             Display(array,size);
             break;
         case 4:
-            QuickSort(array,size);
+
+            //QuickSort(array,size);
             puts("快速排序非递归完成，请按9查看排序后的数组");
             break;
         case 5:
@@ -190,7 +191,7 @@ int setSize()
     int size;
     do
     {
-        scanf_s("%s",&c);
+        scanf("%s",&c);
         fflush(stdin);
         if(c[0]=='a'&&c[1]=='\0')
         {
