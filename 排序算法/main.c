@@ -12,22 +12,16 @@ void select(int *array,int *temp,int size);
 int getInt();
 char* s_gets(char* st, int n);
 void RandonArray(int array[],int size);
-int setSize();
+typedef long clock_t;
+int isRandom = 1;
 
 int main()
 {
     puts("欢迎来到排序算法测试系统");
-    puts("接下需要测试的排序算法有");
-    puts("将为你创建一个随机整数数组!");
-    puts("请输入你需要创建的数组的大小：a. 10000  b.50000  c. 200000");
-    int size = setSize();
-    printf("%d",size);
-    //int *array = (int *)calloc(size, sizeof(int));
+    int * array;
+    GetArray(array);
     int *temp = (int *)calloc(size, sizeof(int));
-    int *array = (int*)malloc(sizeof(int)*size);
     menu();
-    WriteArray(size);
-    ReadArray(size,array);
     select(array,temp,size);
     return 0;
     system("pause");
@@ -82,17 +76,60 @@ void select(int *array,int *temp,int size)
     switch (getInt())
     {
         case 1:
-            insertSort(array,size);
-            puts("归并排序完成，请按9查看排序后的数组");
-            break;
+            {
+                if(isRandom==1)
+                {
+                    clock_t start,end;
+                    start = clock();
+                    insertSort(array,size);
+                    end = clock();
+                    double insert_time = (double)(end - start) / CLOCKS_PER_SEC;
+                    puts("归并排序完成，请按9查看排序后的数组");
+                    printf("所消耗的时间为 %f secs\n",insert_time);
+                    isRandom = 0;
+                }
+                else
+                    puts("请排序前输入10使数组乱序");
+                break;
+
+            }
         case 2:
-            MergeSort(array,0,size-1,temp);
-            puts("归并排序完成，请按9查看排序后的数组");
-            break;
+            {
+                if(isRandom==1)
+                {
+                    clock_t start,end;
+                    start = clock();
+                    MergeSort(array,0,size-1,temp);
+                    end = clock();
+                    double MergeSort_time = (double)(end - start) / CLOCKS_PER_SEC;
+                    puts("归并排序完成，请按9查看排序后的数组");
+                    printf("所消耗的时间为 %f secs\n",MergeSort_time);
+                    isRandom = 0;
+                }
+                else
+                    puts("请排序前输入10使数组乱序");
+                break;
+            }
+
         case 3:
-            QuickSort_Recursion(array,0,size-1);
-            Display(array,size);
-            break;
+            {
+                if(isRandom==1)
+                {
+                    clock_t start,end;
+                    start = clock();
+                    QuickSort_Recursion(array,0,size-1);
+                    end = clock();
+                    double QuickSort_Recursion_time = (double)(end - start) / CLOCKS_PER_SEC;
+                    puts("快速排序完成，请按9查看排序后的数组");
+                    printf("所消耗的时间为 %f secs\n",QuickSort_Recursion_time);
+                    isRandom = 0;
+
+                }
+                else
+                    puts("请排序前输入10使数组乱序");
+                break;
+            }
+
         case 4:
 
             //QuickSort(array,size);
@@ -100,30 +137,65 @@ void select(int *array,int *temp,int size)
             break;
         case 5:
         {
-            int max=GetNumTop(array,1,size);
-            CountSort(array,size,max);
-            puts("计数排序非递归完成，请按9查看排序后的数组");
+            if(isRandom==1)
+            {
+                    clock_t start,end;
+                    start = clock();
+                    int max=GetKTop(array,1,size); //获取最大的数;
+                    CountSort(array,size,max);
+                    end = clock();
+                    double CountSort_time = (double)(end - start) / CLOCKS_PER_SEC;
+                    puts("计数排序非递归完成，请按9查看排序后的数组");
+                    printf("所消耗的时间为 %f secs\n",CountSort_time);
+                    isRandom = 0;
+            }
+            else
+                puts("请排序前输入10使数组乱序");
             break;
+
         }
         case 6:
-            RadixCountSort(array,size);
-            puts("基数排序完成，请按9查看排序后的数组");
-            break;
+            {
+                if(isRandom==1)
+                {
+                    clock_t start,end;
+                    start = clock();
+                    RadixCountSort(array,size);
+                    end = clock();
+                    double RadixCountSort_time = (double)(end-start)/ CLOCKS_PER_SEC;
+                    puts("基数排序完成，请按9查看排序后的数组");
+                    printf("所消耗的时间为 %f secs\n",RadixCountSort_time);
+                    isRandom = 0;
+                }
+                else
+                    puts("请排序前输入10使数组乱序");
+                break;
+            }
+
         case 7:
-            printf("我们将为你生成一个大小为%d的只含有0，1，2的数组\n",size);
-            int *colorarray = (int *)calloc(size, sizeof(int));
-            getcolorArray(colorarray,size);
-            printf("随机生成的数组为：");
-            Display(colorarray,size);
-            ColorSort(colorarray,size);
-            puts("颜色排序完成，现在我们开始打印排序后的数组");
-            Display(colorarray,size);
-            free(colorarray);
+            if(isRandom==1)
+            {
+                    printf("我们将为你生成一个大小为%d的只含有0，1，2的数组\n",size);
+                    int *colorarray = (int *)calloc(size, sizeof(int));
+                    getcolorArray(colorarray,size);
+                    clock_t start,end;
+                    start = clock();
+                    ColorSort(colorarray,size);
+                    end = clock();
+                    double ColorSort_time = (double)(end-start)/ CLOCKS_PER_SEC;
+                    puts("颜色排序完成，现在我们开始打印排序后的数组");
+                    Display(colorarray,size);
+                    printf("所消耗的时间为 %f secs\n",ColorSort_time);
+                    isRandom = 0;
+                    free(colorarray);
+            }
+            else
+                puts("请排序前输入10使数组乱序");
             break;
         case 8:
             puts("请输入你需要找的第几大的数：");
             int k =read();
-            int max=GetNumTop(array,k,size);
+            int max=GetKTop(array,k,size);
             printf("第%d大的数为%d\n",k,max);
             break;
         case 9:
@@ -133,6 +205,7 @@ void select(int *array,int *temp,int size)
         case 10:
             MakeRand(array, size);
             puts("数组乱序成功！");
+            isRandom = 1;
             break;
         case 11:
             system("cls");
@@ -186,35 +259,7 @@ char* s_gets(char* st, int n)
 
 int setSize()
 {
-    char c[2];
-    int i=0;
     int size;
-    do
-    {
-        scanf("%s",&c);
-        fflush(stdin);
-        if(c[0]=='a'&&c[1]=='\0')
-        {
-            size=10000;
-            i=1;
-            printf("初始化成功，我们将为你创建一个大小为%d的随机数组\n",size);
-        }
-        else if(c[0]=='b'&&c[1]=='\0')
-        {
-            size=50000;
-            i=1;
-            printf("初始化成功，我们将为你创建一个大小为%d的随机数组\n",size);
-        }
-        else if(c[0]=='c'&&c[1]=='\0')
-        {
-            size=200000;
-            i=1;
-            printf("初始化成功，我们将为你创建一个大小为%d的随机数组\n",size);
-        }
-        else
-        {
-            puts("对不起，输入错误，请输入字符 a 或 b 或 c");
-        }
-    }while(i==0);
+    size = getInt();
     return size;
 }

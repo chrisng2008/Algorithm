@@ -1,7 +1,7 @@
 
 #ifndef SORT_H_INCLUDED
 #define SORT_H_INCLUDED
-
+int size=0;
 /**
  *  @name        : void insertSort(int *a,int n);
  *  @description : 插入排序算法
@@ -79,8 +79,7 @@ void ColorSort(int *a,int size);
  *  @description : 在一个无序序列中找到第K大/小的数
  *  @param       : 数组指针a，数组长度size
  */
-int GetNumTop(int* a, int k,int size);
-
+int GetKTop(int *a,int k,int size);
 
 int Knum(int num, int k);
 
@@ -95,6 +94,6 @@ void Display(int* array,int size);
 void getcolorArray(int array[], int size);
 void MakeRand(int arr[], int size);
 void swap(int *a, int *b);
-int WriteArray(int size);
-void ReadArray(int size,int* arr);
+int GetArray(int *arr);
+int getMax(int *a,int size);
 #endif // QUEUE_H_INCLUDED

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "Stack.h"
+#include <io.h>
 /**
  *  @name        : void insertSort(int *a,int n);
  *  @description : 插入排序算法
@@ -119,10 +120,13 @@ void QuickSort(int *a,int size)
    //入栈,由于栈先进后出，所以我们先将尾端点入栈
    LinkStackPtr s;
    initLStack(&s);//初始化栈
+   pushLStack(&s,end);
+   pushLStack(&s,begin);
 
 
-}
-*/
+
+}*/
+
 /**
  *  @name        : void QuickSort(int *a, int begin, int end)
  *  @description : 快速排序（枢轴存放）
@@ -190,6 +194,7 @@ void CountSort(int *a, int size , int max)
 
 void RadixCountSort(int *a,int size)
 {
+    int maxtime = getMax(a,size);
     int* array[10];
     for (int i = 0; i < 10; i++)
     {
@@ -197,18 +202,17 @@ void RadixCountSort(int *a,int size)
         array[i][0] = 0;
     }
 
-     for (int pos = 1; pos <= 5; pos++)
+     for (int k = 1; k <= 3; k++)
     {
         for (int i = 0; i < size; i++)
         {
-            int num = Knum(a[i], pos);
+            int num = Knum(a[i], k);
             int index = array[num][0]+1;
             array[num][index] = a[i];
             array[num][0]++;//计数器长度增加
         }
-
-
-        for (int i = 0, j = 0; i < 10; i++)
+        int j=0;//size
+        for (int i = 0; i < 10; i++)
         {
             for (int k = 1; k <= array[i][0]; k++)
                 a[j++] = array[i][k];
@@ -233,9 +237,34 @@ int Knum(int num, int k)
  *  @description : 颜色排序
  *  @param       : 数组指针a（只含0，1，2元素），数组长度size
  */
+
 void ColorSort(int *a,int size)
 {
+    //定义三个指针分别对应0，1，2
+    int p0,p1,p2;
+    int i;
+    //开始时，p0,p1在开头，p2在末尾
+    p0=p1=0;
+    p2=size-1;
+    //开始循环来交换
+    while(p1!=p2)
+    {
+        if(a[p1]==0)
+        {
+            swap((a+p0),(a+p1));
+            p1++;
+            p0++;
+        }
+        else if(a[p1]==2)
+        {
+            swap((a+p1),(a+p2));
+            p2--;
+            //交换之后p1不移动等待下次循环
+        }
+        else
+            p1++;
 
+    }
 }
 
 /**
@@ -244,7 +273,7 @@ void ColorSort(int *a,int size)
  *  @param       : 数组指针a，数组长度size
  */
  /*复制一个数组，然后排序后即可*/
-int GetNumTop(int *a,int k,int size)
+int GetKTop(int *a,int k,int size)
 {
     int *c= (int*)malloc(sizeof(int)*size);
     for (int i=0;i<size;i++)//复制数组
@@ -263,9 +292,9 @@ int GetNumTop(int *a,int k,int size)
 void MakeRand(int arr[], int size)
 {
 	srand((unsigned int)time(NULL)); //随机数种子;
-	for (int i = 0; i<size - 1; i++)
+	for (int i = 0; i<size; i++)
 	{
-		int num = i + rand() % (size - 1 - i); // 取随机数
+		int num = rand()%(size); // 取随机数
 		int temp = arr[i];
 		arr[i] = arr[num];
 		arr[num] = temp; //交换
@@ -308,53 +337,74 @@ void swap(int *a, int *b)
     *b=temp;
 }
 
-
-/*生成随机数列写到文件*/
-int WriteArray(int size)
+/*
+//生成随机数
+int GetArray(int*arr)
 {
-    int i,j;
-    FILE *pf = NULL;
-    int* arr = (int*)malloc(sizeof(int)*size);
-    srand((unsigned)time(NULL));//随机种子
-    pf = fopen("sort.txt","a");
-    //生成数列
-    for(i=0; i<size; i++)
+
+    if((access("RandomArray.txt",F_OK))!=-1)//已存在
     {
-        arr[i] = rand()%1000;
-    }
-    //格式化输出到文件中
-    for(i=0; i<size/10; i++)
-    {
-        for(j=0; j<10; j++)
+        int max = 500000;
+        size =  0;
+        int i;
+        FILE *pf;
+        pf = fopen("RandomArray.txt","r");
+        int* arrsize=(int*)malloc(sizeof(int)*max);
+        for(i = 0; !feof(pf); i++)
         {
-            fprintf(pf,"%-5d",arr[i*10+j]);
+            fscanf(pf, "%d", &arrsize[i]);
+            size++;
         }
-        fprintf(pf,"\n");
-    }
-    fclose(pf);
-    return 0;
-}
-//读取生成数列
-void ReadArray(int size,int* arr)
-{
-    int i,j;
-    FILE *pf;
-    if((pf = fopen("sort.txt","r"))==NULL)
-    {
-        printf("Error\n");
-        system("PAUSE");
-        exit(1);
-    }
-    //读取文件内容到数列
-    for(i=0; i<size/10; i++)
-    {
-        for(j=0; j<10; j++)
+        free (arrsize);
+        arr =(int *)malloc(sizeof(int)*size);
+
+        puts("RandomArray.txt已存在");
+        puts("现在为你读取数据");
+
+        //读取到array
+        for(i=0; i<size/10; i++)
         {
-            fscanf(pf,"%d",&arr[i*10+j]);
+            fscanf(pf,"%d",&arr);
+            fscanf(pf,"\n");
         }
-        fscanf(pf,"\n");
+        fclose(pf);
     }
-    fclose(pf);
+    else
+    {
+        printf("RandomArray.txt不存在，现在为你创建\n");
+        puts("将为你创建一个随机整数数组!");
+        puts("请输入你需要创建的数组的大小：");
+        puts("数量级有三个层次：10000  50000  200000");
+        size=setSize();
+        int i;
+        FILE *pf = NULL;
+        arr = (int*)malloc(sizeof(int)*size);
+        srand((unsigned)time(NULL));//随机种子
+        pf = fopen("RandomArray.txt","a");
+        //生成数列
+        for(i=0; i<size; i++)
+            arr[i] = rand()%1000;
+        //输出到文件
+        for(i=0;i<size;i++)
+        {
+            fprintf(pf,"%-5d",arr[i]);
+        }
+        fclose(pf);
+    }
 }
 
+*/
+
+//确定最大数的位数
+int getMax(int *a,int size)
+{
+    int max=GetKTop(a,1,size);
+    int k=0;
+    while(max!=0)
+    {
+        max /= 10;
+        k++;
+    }
+    return k;
+}
 
